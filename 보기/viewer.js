@@ -35,6 +35,10 @@ function field(label,text,cls){if(!text)return null;const f=el('div','field'+(cl
 function listField(label,items){if(!items?.length)return null;const f=el('div','field');f.append(el('b',null,label));const ul=el('ul','clean');items.forEach(t=>ul.append(el('li',null,t)));f.append(ul);return f;}
 function intro(s,text){s.append(el('p','sub',text));}
 function heading(s,text){const h=el('h2',null,text);h.style.margin='30px 0 12px';s.append(h);}
+// 휴대폰용 인원별 구성: 인원마다 한 장 (표는 휴대폰에서 숨김)
+function setupCards({head,rows}){const w=el('div','setup-m');for(const r of rows){const c=el('div','sc');const h=el('div','sc-h');h.append(el('b',null,r[0]));const team=el('div','sc-team');[[1,'navy'],[2,'red'],[3,'gold'],[4,'ink']].forEach(([i,cl])=>{if(r[i]==='—')return;const t=el('span','chip '+cl);t.append(el('em',null,head[i]),el('b',null,r[i]));team.append(t);});h.append(team);
+ const rd=el('div','sc-rounds');rd.append(el('span','sc-l',head[5]));const g=el('div','rgrid');r[5].split('·').forEach((n,k)=>{const x=el('div','rc');x.append(el('i',null,(k+1)+'R'),el('b',null,n));g.append(x);});rd.append(g);
+ const st=el('div','sc-stats');[6,7,8].forEach(i=>{const x=el('div');x.append(el('span',null,head[i]),el('b',null,r[i]));st.append(x);});c.append(h,rd,st);w.append(c);}return w;}
 function table(head,rows,cls,firstCls){const t=el('table',cls);const tr=el('tr');head.forEach(x=>tr.append(el('th',null,x)));t.append(tr);for(const row of rows){const r=el('tr');row.forEach((x,i)=>r.append(el('td',i===0&&firstCls?firstCls:null,x)));t.append(r);}const c=el('div','card');c.append(t);return c;}
 function partChip(id){const p=parts.get(id);const b=el('button','chip part-'+(p?.kind||''),id+(p?' '+p.title:''));b.onclick=e=>{e.stopPropagation();showPart(id);};return b;}
 
@@ -59,7 +63,7 @@ function showRole(id){const r=roles.get(id);if(!r)return;const box=el('div','kv'
  const g=el('div','grid g2');g.style.marginTop='16px';
  const list=(title,items)=>{const c=el('div','card');c.append(el('h3',null,title));const ul=el('ul','clean');(items||[]).forEach(t=>ul.append(el('li',null,t)));c.append(ul);return c;};
  g.append(list('이 게임이 하는 일',C.purpose),list('승패 판정',(C.wins||[]).map(([q,a])=>q+' → '+a)));
- s.append(top,g);heading(s,'인원별 구성');s.append(table(C.setup.head,C.setup.rows,'setup'));
+ s.append(top,g);heading(s,'인원별 구성');s.append(table(C.setup.head,C.setup.rows,'setup'),setupCards(C.setup));
  if(C.todo?.length||C.cost){const g2=el('div','grid g2');g2.style.marginTop='16px';if(C.todo?.length)g2.append(list('다듬을 곳',C.todo));if(C.cost){const cost=el('div','card');cost.append(el('h3',null,'세트 원가'),el('p',null,C.cost));g2.append(cost);}s.append(g2);}}
 
 // 2) 기획 · 아이디어 도출

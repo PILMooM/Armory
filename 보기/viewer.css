@@ -206,6 +206,36 @@ main>*{min-width:0}
  table.stack td:not(:first-child)[data-label]::before{content:attr(data-label);display:inline-block;min-width:86px;margin-right:8px;font-size:12.5px;font-weight:800;color:var(--mute)}
  table.stack td.before{color:var(--mute)}
  table.tl.stack tr.future{background:var(--card2)}
+ /* 이름표 칸 폭을 고정해 값이 한 줄로 가지런히, 줄 사이에 옅은 점선 */
+ table.stack tr{padding:14px 16px}
+ main table.stack td:first-child{border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:2px}
+ main table.stack:not(.tl) td:not(:first-child)[data-label]{display:grid;grid-template-columns:96px minmax(0,1fr);column-gap:12px;align-items:baseline;padding:7px 0;border-top:1px dashed var(--line)}
+ main table.stack:not(.tl) td:nth-child(2)[data-label]{border-top:0}
+ table.stack:not(.tl) td:not(:first-child)[data-label]::before{min-width:0;margin:0;line-height:1.45}
+}
+
+/* 인원별 구성: 휴대폰에서는 표 대신 인원마다 한 장 — 진영 칩, 라운드별 작업 인원 칸, 투표 기준 3칸 */
+.setup-m{display:none}
+@media(max-width:720px){
+ .card:has(>table.setup){display:none}
+ .setup-m{display:grid;gap:12px}
+ .sc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:0 2px 6px #6b553010}
+ .sc-h{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding-bottom:12px;border-bottom:1px solid var(--line)}
+ .sc-h>b{font-size:22px;font-weight:900;color:var(--red);line-height:1}
+ .sc-team{display:flex;flex-wrap:wrap;gap:6px}
+ .chip{display:inline-flex;align-items:baseline;gap:5px;border-radius:999px;padding:3px 10px;font-size:13px;line-height:1.4}
+ .chip em{font-style:normal;font-weight:700}.chip b{font-weight:900}
+ .chip.navy{background:var(--navy-soft);color:var(--navy)}.chip.red{background:var(--red-soft);color:var(--red)}
+ .chip.gold{background:var(--gold-soft);color:var(--gold)}.chip.ink{background:#e8e4da;color:var(--ink)}
+ .sc-rounds{padding:12px 0}
+ .sc-l{display:block;font-size:12.5px;font-weight:800;color:var(--mute);margin-bottom:6px}
+ .rgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:5px}
+ .rc{background:var(--card2);border-radius:8px;text-align:center;padding:5px 0 6px;line-height:1.25}
+ .rc i{display:block;font-style:normal;font-size:11px;font-weight:700;color:var(--mute)}
+ .rc b{font-size:17px;font-weight:900;color:var(--ink)}
+ .sc-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding-top:12px;border-top:1px solid var(--line);text-align:center}
+ .sc-stats span{display:block;font-size:11.5px;font-weight:700;color:var(--mute);line-height:1.35}
+ .sc-stats b{display:block;margin-top:2px;font-size:16px;font-weight:900;color:var(--navy)}
 }
 
 /* 탭 줄만 위에 붙임 — 제목 영역은 스크롤되면 사라짐 */
