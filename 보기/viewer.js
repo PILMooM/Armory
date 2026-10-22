@@ -59,20 +59,28 @@ function showRole(id){const r=roles.get(id);if(!r)return;const box=el('div','kv'
  detail.replaceChildren(box);highlight(id);toDetail();}
 
 // 1) 한눈에
-{const s=sections.overview,top=el('div','card hero');top.append(el('p','lead',C.oneLine||''),el('p','sub',C.summary||''));
- const g=el('div','grid g2');g.style.marginTop='16px';
+{const s=sections.overview,G=C.glance,W=C.winView;
  const list=(title,items)=>{const c=el('div','card');c.append(el('h3',null,title));const ul=el('ul','clean');(items||[]).forEach(t=>ul.append(el('li',null,t)));c.append(ul);return c;};
- const W=C.winView;
- if(W){g.classList.remove('g2');g.append(list('이 게임은?',C.purpose));}else g.append(list('이 게임은?',C.purpose),list('승패 판정',(C.wins||[]).map(([q,a])=>q+' → '+a)));
- s.append(top,g);
- // 승패 판정 그림: 생산진행도 판 아래 구간 띠(조선 | 0 | 일본), 그 아래 최종 지목 보정을 토큰 그림으로
- if(W){heading(s,'승패 판정');const c=el('div','card wv');
-  const tr=el('div','wv-track');tr.append(img(W.track,'생산진행도'));
-  const z=el('div','wv-zones');W.zones.forEach(([n,t],i)=>{const d=el('div','wz wz'+i);d.append(el('b',null,n),el('span',null,t));z.append(d);});tr.append(z);
-  c.append(tr,el('p','wv-zero',W.zero));
-  const adj=el('div','wv-adj');W.adjust.forEach(a=>{const b=el('div','wa');b.append(el('h4',null,a.who));const r=el('div','wa-row');
-   a.items.forEach(([k,v])=>{const it=el('div','wa-it');it.append(img(W.tokens[v],v),el('span',null,k),el('b','wa-v '+(v.startsWith('+')?'n-p':v==='0'?'n-z':'n-m'),v));r.append(it);});b.append(r);adj.append(b);});
-  c.append(el('h4','wv-h','최종 지목 보정 — 6라운드가 끝나고 밀정을 지목한 결과로 생산진행도를 한 칸 더 움직임'),adj,el('p','wv-note',W.note));s.append(c);}heading(s,'인원별 구성');s.append(table(C.setup.head,C.setup.rows,'setup'),setupCards(C.setup));
+ const gh=(t,sub)=>{const h=el('h2','gl-h',t);if(sub)h.append(el('small',null,sub));s.append(h);};
+ if(G){// 한 장짜리 기획 콘티와 같은 구성: 제목 → 세 진영 → 한 라운드 콘티 → 6라운드 로드맵 → 승패 → 두 상자
+  const hd=el('div','gl-head');hd.append(el('p','gl-kicker',G.kicker),el('h1','gl-title',G.title),el('p','gl-lead',G.lead));s.append(hd);
+  gh(G.sides.title,G.sides.sub);const sd=el('div','gl-sides');G.sides.items.forEach(([im,tag,col,txt])=>{const d=el('div','gl-side');d.append(img(im,tag),el('span','gl-tag '+col,tag),el('p',null,txt));sd.append(d);});s.append(sd);
+  gh(G.round.title,G.round.sub);const st=el('div','gl-strip');G.round.items.forEach((r,i)=>{const f=el('div','gl-frame'),sh=el('div','gl-shot '+r.kind);
+   sh.append(el('span','gl-no'+(r.hot?' red':''),two(i)));r.imgs.forEach(x=>sh.append(x==='→'?el('span','gl-arrow','→'):img(x,'')));
+   const cap=el('div','gl-cap');cap.append(el('b',null,r.title),el('span',null,r.text));const em=el('em');em.append(el('i',null,'노림수 · '),document.createTextNode(r.aim));cap.append(em);f.append(sh,cap);st.append(f);});s.append(st);
+  gh(G.road.title,G.road.sub);const rd=el('div','gl-road');G.road.items.forEach(([r,n,sm,note])=>{const d=el('div','gl-r'+(note?' hot':''));const c=el('div','gl-crew',n);c.append(el('small',null,sm));d.append(el('i',null,r),c);if(note)d.append(el('div','gl-note',note));rd.append(d);});
+  {const d=el('div','gl-r final');d.append(el('i',null,G.road.final[0]),el('div','gl-note',G.road.final[1]));rd.append(d);}
+  const rw=el('div','gl-roadwrap');rw.append(rd);s.append(rw);
+  const ru=el('p','gl-rule');ru.append(el('b',null,G.road.rule[0]),document.createTextNode(' '+G.road.rule[1]));s.append(ru);
+  const jd=el('div','gl-judge');jd.append(img(W?W.track:'track-board.jpg','생산진행도 −7 ~ +7'));const ws=el('div','gl-wins');G.wins.forEach(([a,b,col])=>{const w=el('div','gl-win '+col);w.append(el('b',null,a),document.createTextNode(' · '+b));ws.append(w);});jd.append(ws);s.append(jd);
+  // 최종 지목 보정(토큰 그림)은 승패 바로 아래
+  if(W){const c=el('div','card wv');const adj=el('div','wv-adj');W.adjust.forEach(a=>{const b=el('div','wa');b.append(el('h4',null,a.who));const r=el('div','wa-row');
+    a.items.forEach(([k,v])=>{const it=el('div','wa-it');it.append(img(W.tokens[v],v),el('span',null,k),el('b','wa-v '+(v.startsWith('+')?'n-p':v==='0'?'n-z':'n-m'),v));r.append(it);});b.append(r);adj.append(b);});
+   c.append(el('h4','wv-h','최종 지목 보정 — 밀정을 지목한 결과로 생산진행도를 한 칸 더 움직임'),adj,el('p','wv-note',W.note));s.append(c);}
+  const bx=el('div','gl-boxes');G.boxes.forEach(([t,p])=>{const b=el('div','gl-box');b.append(el('b',null,t),el('p',null,p));bx.append(b);});s.append(bx);
+ }else{const top=el('div','card hero');top.append(el('p','lead',C.oneLine||''),el('p','sub',C.summary||''));const g=el('div','grid g2');g.style.marginTop='16px';
+  g.append(list('이 게임은?',C.purpose),list('승패 판정',(C.wins||[]).map(([q,a])=>q+' → '+a)));s.append(top,g);}
+ heading(s,'인원별 구성');s.append(table(C.setup.head,C.setup.rows,'setup'),setupCards(C.setup));
  if(C.todo?.length||C.cost){const g2=el('div','grid g2');g2.style.marginTop='16px';if(C.todo?.length)g2.append(list('다듬을 곳',C.todo));if(C.cost){const cost=el('div','card');cost.append(el('h3',null,'세트 원가'),el('p',null,C.cost));g2.append(cost);}s.append(g2);}}
 
 // 2) 기획 · 아이디어 도출
@@ -165,7 +173,7 @@ for(const t of document.querySelectorAll('main table')){const rows=[...t.rows];c
 // 글 다듬기 (관계 맵 그림 속 글자는 건드리지 않음)
 // 1) 여러 문장이 한 덩어리면 마침표 뒤에서 줄바꿈  2) 생산진행도 숫자에 진영 색: −는 조선 남색, +는 일본 빨강, 0은 중립 금색
 {const SIGN=/\((?:[−-]|\+)\)|(?<![\w가-힣−+-])[−+-]\d+(?:~[−+]\d+)?|(?<![\w.~가-힣])0(?![\w.%~])/g;
- const w=document.createTreeWalker(main,NodeFilter.SHOW_TEXT),nodes=[];let n;while(n=w.nextNode())if(!n.parentElement.closest('svg,script,style,.wv'))nodes.push(n);
+ const w=document.createTreeWalker(main,NodeFilter.SHOW_TEXT),nodes=[];let n;while(n=w.nextNode())if(!n.parentElement.closest('svg,script,style,.wv,.gl-road,.gl-win,.gl-tag'))nodes.push(n);
  for(const t of nodes){if(/[.?!] +(?=\S)/.test(t.data)){t.data=t.data.replace(/([.?!]) +(?=\S)/g,'$1\n');t.parentElement.classList.add('lines');}
   SIGN.lastIndex=0;if(!SIGN.test(t.data))continue;SIGN.lastIndex=0;const f=document.createDocumentFragment();let last=0,m;
   while(m=SIGN.exec(t.data)){f.append(t.data.slice(last,m.index));const s=m[0];f.append(el('b','num '+(s.includes('~')?'n-r':/[−-]/.test(s)?'n-m':s.includes('+')?'n-p':'n-z'),s));last=m.index+s.length;}
