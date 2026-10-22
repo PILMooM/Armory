@@ -451,3 +451,8 @@ b.n-m{background:linear-gradient(transparent 58%,#c9d8ea 58%) !important}
 b.n-p{background:linear-gradient(transparent 58%,#f2cdc7 58%) !important}
 b.n-z{background:linear-gradient(transparent 58%,#ecdcae 58%) !important}
 b.n-r{background:linear-gradient(transparent 58%,#e2dccd 58%) !important}
+
+/* 확정 파노라마 배너: 낮은 210px 헤더에 전체 장면 표시 */
+header .head{min-height:210px;padding-top:32px;padding-bottom:28px}
+header{background-image:linear-gradient(90deg,#10182065,transparent 60%,#17110d20),url(../그림/arsenal-header-wide-v2.png);background-size:100% 100%,100% 420%;background-position:center,center 47.7%;background-repeat:no-repeat}
+@media(max-width:700px){header .head{min-height:190px;padding-top:24px;padding-bottom:22px}header{background-size:100% 100%,auto 420%;background-position:center,62% 47.7%}}
