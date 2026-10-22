@@ -91,7 +91,7 @@ window.CONTI={
       "→",
       "gl-tray.png"
      ],
-     "kind": "tok",
+     "kind": "tok big",
      "hot": 1,
      "title": "용광로 공개",
      "text": "주머니를 섞어 트레이에 공개. 누가 낸 토큰인지는 밝히지 않는다",

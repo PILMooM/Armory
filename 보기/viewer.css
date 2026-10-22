@@ -323,9 +323,9 @@ h2.gl-h small{font-size:15px;font-weight:500;color:var(--sub)}
 .gl-frame{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
 .gl-shot{height:140px;background:var(--card2);display:flex;align-items:center;justify-content:center;gap:6px;position:relative;padding:10px}
 .gl-shot img{max-height:100%;max-width:100%;object-fit:contain}
-.gl-shot.card img{height:120px;border-radius:6px;box-shadow:0 2px 6px #0003}
-.gl-shot.tok img{height:62px}
-.gl-shot.wide img{width:100%;height:auto}
+.gl-shot.k-card img{height:120px;border-radius:6px;box-shadow:0 2px 6px #0003}
+.gl-shot.k-tok img{height:62px}
+.gl-shot.k-wide img{width:100%;height:auto}
 .gl-arrow{font-size:22px;color:var(--navy);font-weight:800}
 .gl-no{position:absolute;left:10px;top:10px;min-width:36px;height:36px;border-radius:8px;background:var(--navy);color:#fff;font-size:15px;font-weight:900;display:flex;align-items:center;justify-content:center;z-index:1}
 .gl-no.red{background:var(--red)}
@@ -361,9 +361,14 @@ h2.gl-h small{font-size:15px;font-weight:500;color:var(--sub)}
 @media(max-width:720px){
  .gl-title{font-size:28px}.gl-lead{font-size:15px}h2.gl-h{font-size:20px;margin-top:28px}h2.gl-h small{font-size:13px}
  .gl-sides{grid-template-columns:repeat(2,1fr);gap:16px 10px}.gl-side img{height:170px}.gl-tag{font-size:14px}.gl-side p{font-size:13.5px}
- .gl-strip{grid-template-columns:1fr;gap:10px}.gl-frame{flex-direction:row}.gl-shot{width:42%;height:auto;min-height:120px;flex:none}.gl-shot.card img{height:90px}.gl-shot.tok img{height:40px}
+ .gl-strip{grid-template-columns:1fr;gap:10px}.gl-frame{flex-direction:row}.gl-shot{width:42%;height:auto;min-height:120px;flex:none}.gl-shot.k-card img{height:90px}.gl-shot.k-tok img{height:40px}
  .gl-cap b{font-size:16px}.gl-cap span,.gl-cap em{font-size:13.5px}
  .gl-judge{grid-template-columns:1fr}.gl-boxes{grid-template-columns:1fr}
 }
 .gl-box b.num{display:inline;font-size:inherit;margin:0}
 .gl-box b.num{padding:0 3px}
+/* 한 라운드 콘티: 장면 칸은 모두 같은 모양(카드 스타일이 섞이지 않게), 04 주머니·트레이는 크게 */
+.gl-shot{border-radius:0;border:0;box-shadow:none;margin:0}
+.gl-shot.k-tok.big img{height:92px}
+.gl-shot.k-tok.big .gl-arrow{font-size:20px}
+@media(max-width:720px){.gl-shot.k-tok.big img{height:54px}}

@@ -65,7 +65,7 @@ function showRole(id){const r=roles.get(id);if(!r)return;const box=el('div','kv'
  if(G){// 한 장짜리 기획 콘티와 같은 구성: 제목 → 세 진영 → 한 라운드 콘티 → 6라운드 로드맵 → 승패 → 두 상자
   const hd=el('div','gl-head');hd.append(el('p','gl-kicker',G.kicker),el('h1','gl-title',G.title),el('p','gl-lead',G.lead));s.append(hd);
   gh(G.sides.title,G.sides.sub);const sd=el('div','gl-sides');G.sides.items.forEach(([im,tag,col,txt])=>{const d=el('div','gl-side');d.append(img(im,tag),el('span','gl-tag '+col,tag),el('p',null,txt));sd.append(d);});s.append(sd);
-  gh(G.round.title,G.round.sub);const st=el('div','gl-strip');G.round.items.forEach((r,i)=>{const f=el('div','gl-frame'),sh=el('div','gl-shot '+r.kind);
+  gh(G.round.title,G.round.sub);const st=el('div','gl-strip');G.round.items.forEach((r,i)=>{const f=el('div','gl-frame'),sh=el('div','gl-shot k-'+r.kind);
    sh.append(el('span','gl-no'+(r.hot?' red':''),two(i)));r.imgs.forEach(x=>sh.append(x==='→'?el('span','gl-arrow','→'):img(x,'')));
    const cap=el('div','gl-cap');cap.append(el('b',null,r.title),el('span',null,r.text));const em=el('em');em.append(el('i',null,'노림수 · '),document.createTextNode(r.aim));cap.append(em);f.append(sh,cap);st.append(f);});s.append(st);
   gh(G.road.title,G.road.sub);const rd=el('div','gl-road');G.road.items.forEach(([r,n,sm,note])=>{const d=el('div','gl-r'+(note?' hot':''));const c=el('div','gl-crew',n);c.append(el('small',null,sm));d.append(el('i',null,r),c);if(note)d.append(el('div','gl-note',note));rd.append(d);});
