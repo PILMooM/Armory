@@ -480,3 +480,17 @@ header{background-image:linear-gradient(90deg,#10182065,transparent 60%,#17110d2
 
 /* 역할 카드 원본의 외곽만 부드럽게 */
 .mk-top .mk-media img[src*="card-"]{border-radius:8px;filter:none;box-shadow:0 3px 9px #172b4030}
+
+/* 메커니즘만 넓은 화면에서 3열 */
+@media(min-width:1200px){
+ .mk-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+ .mk-name{padding:16px 18px;min-height:100px;grid-template-columns:30px 1fr;column-gap:9px}
+ .mk-name b{font-size:18px}.mk-name small{font-size:13px}
+ .mk-media{height:170px;padding:16px 18px;gap:10px}
+ .mk-top .mk-media img{max-height:138px}.mk-top .mk-tokens img{max-height:110px}
+ .mk-top .mk-boards img{max-height:62px}
+ .mk-body{padding:18px;gap:16px}
+ .mk-row{grid-template-columns:1fr;gap:8px}
+ .mk-row i{justify-self:start;min-width:65px}
+ .mk-row p,.mk-feel p{font-size:14px}
+}
