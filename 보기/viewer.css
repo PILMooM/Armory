@@ -445,3 +445,9 @@ table.kn-t{width:100%;border-collapse:separate;border-spacing:0 8px;min-width:72
 .mk-top.wide{grid-template-columns:1fr;gap:14px}
 .mk-top.wide img{width:100%;height:auto;max-height:150px;object-fit:contain}
 @media(max-width:720px){.mk-top.wide{grid-template-columns:1fr}.mk-top.wide img{width:100%;height:auto}}
+/* 본문 속 −1·0·+1: 칸처럼 늘어나지 않게 글자 안에 두고, 형광펜처럼 아래쪽에만 색 */
+b.num{display:inline !important;margin:0 !important;padding:0 1px !important;border-radius:0 !important;font-size:inherit !important;width:auto !important}
+b.n-m{background:linear-gradient(transparent 58%,#c9d8ea 58%) !important}
+b.n-p{background:linear-gradient(transparent 58%,#f2cdc7 58%) !important}
+b.n-z{background:linear-gradient(transparent 58%,#ecdcae 58%) !important}
+b.n-r{background:linear-gradient(transparent 58%,#e2dccd 58%) !important}
