@@ -441,3 +441,7 @@ table.kn-t{width:100%;border-collapse:separate;border-spacing:0 8px;min-width:72
  .nm-v{font-size:19px}
  .ch-ba{grid-template-columns:1fr}.ch-arrow{transform:rotate(90deg);line-height:1}
 }
+/* 가로로 긴 그림(라운드 기록판·생산진행도 등)은 카드 위에 폭 가득 */
+.mk-top.wide{grid-template-columns:1fr;gap:14px}
+.mk-top.wide img{width:100%;height:auto;max-height:150px;object-fit:contain}
+@media(max-width:720px){.mk-top.wide{grid-template-columns:1fr}.mk-top.wide img{width:100%;height:auto}}

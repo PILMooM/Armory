@@ -93,7 +93,7 @@ function showRole(id){const r=roles.get(id);if(!r)return;const box=el('div','kv'
 // 3) 메커니즘 설계
 {const s=sections.mechanics;intro(s,'게임을 움직이는 장치들입니다. 규칙이 무엇인지, 왜 그렇게 설계했는지, 플레이어가 무엇을 느끼게 되는지를 함께 적었습니다.');
  // 장치 카드: 그림·번호·이름 → 규칙 → 왜 이렇게(옅게) → 플레이어의 한마디(말풍선)
- const g=el('div','mk-grid');(C.mechanics||[]).forEach((m,i)=>{const c=el('div','mk');const top=el('div','mk-top');top.append(img(m.img,m.name));const nm=el('div','mk-name');
+ const g=el('div','mk-grid');(C.mechanics||[]).forEach((m,i)=>{const c=el('div','mk');const top=el('div','mk-top'),mi=img(m.img,m.name);mi.loading='eager';const wide=()=>{if(mi.naturalWidth/mi.naturalHeight>1.8)top.classList.add('wide');};mi.complete?wide():mi.addEventListener('load',wide);top.append(mi);const nm=el('div','mk-name');
   const [t1,t2]=m.name.split(' — ');nm.append(el('span','mk-no',two(i)),el('b',null,t1));if(t2)nm.append(el('small',null,t2));top.append(nm);
   const body=el('div','mk-body');const row=(lb,txt,cl)=>{const r=el('div','mk-row '+cl);r.append(el('i',null,lb),el('p',null,txt));return r;};
   body.append(row('규칙',m.rule,'rule'),row('왜 이렇게',m.why,'why'));const f=el('div','mk-feel');f.append(el('p',null,m.feel));body.append(f);c.append(top,body);g.append(c);});s.append(g);
