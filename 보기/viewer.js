@@ -24,10 +24,10 @@ const DETAIL=new Set(['map','roles','flow','parts']);
 const tabbar=el('div','tabbar');tabbar.append(tabs);header.append(head);document.body.append(header,tabbar);
 const main=el('main'),views=el('div'),detail=el('aside','card');detail.id='detail';main.append(views,detail);document.body.append(main);
 // 콘티.js에 내용이 없는 탭은 버튼을 숨김 (공개판은 게임 진행 등을 뺀 콘티.js를 씀)
-const HAS={idea:!!C.ideation,mechanics:!!C.mechanics?.length,flow:!!C.stages?.length,roadmap:!!C.phases?.length};
+const HAS={parts:false,idea:!!C.ideation,mechanics:!!C.mechanics?.length,flow:!!C.stages?.length,roadmap:!!C.phases?.length};
 const SHOWN=TABS.filter(([id])=>HAS[id]!==false).map(([id])=>id);
 const sections={};for(const [id,name] of TABS){const s=el('section','view');s.hidden=true;sections[id]=s;views.append(s);if(!SHOWN.includes(id))continue;const b=el('button',null,name);b.dataset.tab=id;b.onclick=()=>show(id);tabs.append(b);}
-function show(id){for(const b of tabs.children){b.classList.toggle('on',b.dataset.tab===id);if(b.dataset.tab===id)tabs.scrollTo({left:b.offsetLeft-(tabs.clientWidth-b.offsetWidth)/2});}for(const [k,s] of Object.entries(sections))s.hidden=k!==id;main.classList.toggle('wide',WIDE.has(id));if(id==='map'&&mapWrap)mapWrap.scrollLeft=(mapWrap.scrollWidth-mapWrap.clientWidth)/2;detail.hidden=!DETAIL.has(id);try{history.replaceState(null,'','#'+id);}catch{}scrollTo({top:0});}
+function show(id){if(id==='parts')id='overview';for(const b of tabs.children){b.classList.toggle('on',b.dataset.tab===id);if(b.dataset.tab===id)tabs.scrollTo({left:b.offsetLeft-(tabs.clientWidth-b.offsetWidth)/2});}for(const [k,s] of Object.entries(sections))s.hidden=k!==id;main.classList.toggle('wide',WIDE.has(id));if(id==='map'&&mapWrap)mapWrap.scrollLeft=(mapWrap.scrollWidth-mapWrap.clientWidth)/2;detail.hidden=!DETAIL.has(id);try{history.replaceState(null,'','#'+id);}catch{}scrollTo({top:0});}
 
 // 공통 조각
 function blank(){detail.replaceChildren(el('p','empty','역할이나 구성품을 누르면 여기에 자세히 나옵니다.'));}
