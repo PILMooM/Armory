@@ -63,7 +63,7 @@ function showRole(id){const r=roles.get(id);if(!r)return;const box=el('div','kv'
  const g=el('div','grid g2');g.style.marginTop='16px';
  const list=(title,items)=>{const c=el('div','card');c.append(el('h3',null,title));const ul=el('ul','clean');(items||[]).forEach(t=>ul.append(el('li',null,t)));c.append(ul);return c;};
  const W=C.winView;
- if(W){g.classList.remove('g2');g.append(list('이 게임이 하는 일',C.purpose));}else g.append(list('이 게임이 하는 일',C.purpose),list('승패 판정',(C.wins||[]).map(([q,a])=>q+' → '+a)));
+ if(W){g.classList.remove('g2');g.append(list('이 게임은?',C.purpose));}else g.append(list('이 게임은?',C.purpose),list('승패 판정',(C.wins||[]).map(([q,a])=>q+' → '+a)));
  s.append(top,g);
  // 승패 판정 그림: 생산진행도 판 아래 구간 띠(조선 | 0 | 일본), 그 아래 최종 지목 보정을 토큰 그림으로
  if(W){heading(s,'승패 판정');const c=el('div','card wv');
