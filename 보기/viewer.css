@@ -372,3 +372,5 @@ h2.gl-h small{font-size:15px;font-weight:500;color:var(--sub)}
 .gl-shot.k-tok.big img{height:92px}
 .gl-shot.k-tok.big .gl-arrow{font-size:20px}
 @media(max-width:720px){.gl-shot.k-tok.big img{height:54px}}
+/* 두 상자(모두 같은 5개로 시작 · 플레이테스트로 다듬기): 종이 바탕과 구분되게 다른 카드처럼 흰 바탕 + 테두리 */
+.gl-box{background:var(--card);border:1px solid var(--line);box-shadow:0 2px 6px #6b553010}
