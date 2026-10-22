@@ -92,12 +92,25 @@ function showRole(id){const r=roles.get(id);if(!r)return;const box=el('div','kv'
 
 // 3) 메커니즘 설계
 {const s=sections.mechanics;intro(s,'게임을 움직이는 장치들입니다. 규칙이 무엇인지, 왜 그렇게 설계했는지, 플레이어가 무엇을 느끼게 되는지를 함께 적었습니다.');
- const g=el('div','mechs');(C.mechanics||[]).forEach((m,i)=>{const c=el('div','card mech');const pic=el('div','mpic');pic.append(img(m.img,m.name));const body=el('div');
-  body.append(el('span','ino',two(i)),el('h3',null,m.name),field('규칙',m.rule),field('설계 이유',m.why,'why'),field('플레이어가 느끼는 것',m.feel,'feel'));c.append(pic,body);g.append(c);});s.append(g);
- if(C.knowledge){heading(s,'누가 무엇을 아는가');s.append(table(C.knowledge.head,C.knowledge.rows,'knowledge','who-row'));}
- if(C.numbers?.length){heading(s,'숫자 설계');s.append(table(['항목','값','이유'],C.numbers,'numbers','real'));}
- if(C.changes?.length){heading(s,'플레이테스트로 바뀐 규칙 (10/6 원고 → 10/12 최종 룰북)');const t=el('table','changes');const hr=el('tr');['10/6 원고','10/12 최종','이유 · 효과'].forEach(x=>hr.append(el('th',null,x)));t.append(hr);
-  for(const [a,b,why] of C.changes){const r=el('tr');r.append(el('td','before',a),el('td','after',b),el('td',null,why));t.append(r);}const c=el('div','card');c.append(t);s.append(c);}}
+ // 장치 카드: 그림·번호·이름 → 규칙 → 왜 이렇게(옅게) → 플레이어의 한마디(말풍선)
+ const g=el('div','mk-grid');(C.mechanics||[]).forEach((m,i)=>{const c=el('div','mk');const top=el('div','mk-top');top.append(img(m.img,m.name));const nm=el('div','mk-name');
+  const [t1,t2]=m.name.split(' — ');nm.append(el('span','mk-no',two(i)),el('b',null,t1));if(t2)nm.append(el('small',null,t2));top.append(nm);
+  const body=el('div','mk-body');const row=(lb,txt,cl)=>{const r=el('div','mk-row '+cl);r.append(el('i',null,lb),el('p',null,txt));return r;};
+  body.append(row('규칙',m.rule,'rule'),row('왜 이렇게',m.why,'why'));const f=el('div','mk-feel');f.append(el('p',null,m.feel));body.append(f);c.append(top,body);g.append(c);});s.append(g);
+ // 누가 무엇을 아는가: 글 대신 아는 정도를 칩으로 (앎 · 일부 · 모름)
+ if(C.knowledge){heading(s,'누가 무엇을 아는가');const K=C.knowledge,box=el('div','card kn');const t=el('table','kn-t');const hr=el('tr');K.head.forEach(h=>hr.append(el('th',null,h)));t.append(hr);
+  const ROLE={'조선 노동자':'navy','밀정':'red','일본군 대장':'red','중립 황도윤':'gold'};
+  K.rows.forEach(r=>{const tr=el('tr');r.forEach((v,i)=>{const td=el('td');if(!i){td.append(el('span','kn-role '+(ROLE[v]||''),v));tr.append(td);return;}
+   const lv=/^모름/.test(v)?'no':/^(앎|모두 앎)/.test(v)?'yes':'part';const chip=el('span','kn-chip '+lv);chip.append(el('b',null,lv==='yes'?'✓':lv==='no'?'✕':'◐'),document.createTextNode(v.replace(/\s*\(.*\)$/,'')));td.append(chip);
+   const note=v.match(/\((.*)\)$/);if(note)td.append(el('small','kn-note',note[1]));tr.append(td);});t.append(tr);});
+  const lg=el('div','kn-legend');[['yes','✓','앎'],['part','◐','일부만'],['no','✕','모름']].forEach(([c,s2,l])=>{const x=el('span','kn-chip '+c);x.append(el('b',null,s2),document.createTextNode(l));lg.append(x);});
+  const wrap=el('div','kn-wrap');wrap.append(t);box.append(wrap,lg);s.append(box);}
+ // 숫자 설계: 값을 크게 보여 주는 타일
+ if(C.numbers?.length){heading(s,'숫자 설계');const g2=el('div','nm-grid');C.numbers.forEach(([k,v,why])=>{const c=el('div','nm');c.append(el('span','nm-k',k),el('b','nm-v',v),el('p',null,why));g2.append(c);});s.append(g2);}
+ // 바뀐 규칙: 전 → 후 카드
+ if(C.changes?.length){heading(s,'플레이테스트로 바뀐 규칙 (10/6 원고 → 10/12 최종 룰북)');const g3=el('div','ch-grid');C.changes.forEach(([a,b,why],i)=>{const c=el('div','ch');
+   const ba=el('div','ch-ba');const be=el('div','ch-before');be.append(el('i',null,'전'),el('p',null,a));const af=el('div','ch-after');af.append(el('i',null,'후'),el('p',null,b));ba.append(be,el('span','ch-arrow','→'),af);
+   c.append(el('span','ch-no',two(i)),ba,el('p','ch-why',why));g3.append(c);});s.append(g3);}}
 
 // 4) 관계 맵: 역할(원)·구성품(네모)·관계선(실선)·구성품이 가리키는 것(점선 화살표)
 const NS='http://www.w3.org/2000/svg',svgEl=(t,a={})=>{const e=document.createElementNS(NS,t);for(const [k,v] of Object.entries(a))e.setAttribute(k,v);return e;};
@@ -174,7 +187,7 @@ for(const t of document.querySelectorAll('main table')){const rows=[...t.rows];c
 // 1) 여러 문장이 한 덩어리면 마침표 뒤에서 줄바꿈  2) 생산진행도 숫자에 진영 색: −는 조선 남색, +는 일본 빨강, 0은 중립 금색
 {const SIGN=/\((?:[−-]|\+)\)|(?<![\w가-힣−+-])[−+-]\d+(?:~[−+]\d+)?|(?<![\w.~가-힣])0(?![\w.%~])/g;
  const w=document.createTreeWalker(main,NodeFilter.SHOW_TEXT),nodes=[];let n;while(n=w.nextNode())if(!n.parentElement.closest('svg,script,style,.wv,.gl-road,.gl-win,.gl-tag'))nodes.push(n);
- for(const t of nodes){if(/[.?!] +(?=\S)/.test(t.data)){t.data=t.data.replace(/([.?!]) +(?=\S)/g,'$1\n');t.parentElement.classList.add('lines');}
+ for(const t of nodes){if(/[.?!] +(?=\S)|\n/.test(t.data)){t.data=t.data.replace(/([.?!]) +(?=\S)/g,'$1\n');t.parentElement.classList.add('lines');}
   SIGN.lastIndex=0;if(!SIGN.test(t.data))continue;SIGN.lastIndex=0;const f=document.createDocumentFragment();let last=0,m;
   while(m=SIGN.exec(t.data)){f.append(t.data.slice(last,m.index));const s=m[0];f.append(el('b','num '+(s.includes('~')?'n-r':/[−-]/.test(s)?'n-m':s.includes('+')?'n-p':'n-z'),s));last=m.index+s.length;}
   f.append(t.data.slice(last));t.replaceWith(f);}}
