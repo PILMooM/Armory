@@ -62,8 +62,17 @@ function showRole(id){const r=roles.get(id);if(!r)return;const box=el('div','kv'
 {const s=sections.overview,top=el('div','card hero');top.append(el('p','lead',C.oneLine||''),el('p','sub',C.summary||''));
  const g=el('div','grid g2');g.style.marginTop='16px';
  const list=(title,items)=>{const c=el('div','card');c.append(el('h3',null,title));const ul=el('ul','clean');(items||[]).forEach(t=>ul.append(el('li',null,t)));c.append(ul);return c;};
- g.append(list('이 게임이 하는 일',C.purpose),list('승패 판정',(C.wins||[]).map(([q,a])=>q+' → '+a)));
- s.append(top,g);heading(s,'인원별 구성');s.append(table(C.setup.head,C.setup.rows,'setup'),setupCards(C.setup));
+ const W=C.winView;
+ if(W){g.classList.remove('g2');g.append(list('이 게임이 하는 일',C.purpose));}else g.append(list('이 게임이 하는 일',C.purpose),list('승패 판정',(C.wins||[]).map(([q,a])=>q+' → '+a)));
+ s.append(top,g);
+ // 승패 판정 그림: 생산진행도 판 아래 구간 띠(조선 | 0 | 일본), 그 아래 최종 지목 보정을 토큰 그림으로
+ if(W){heading(s,'승패 판정');const c=el('div','card wv');
+  const tr=el('div','wv-track');tr.append(img(W.track,'생산진행도'));
+  const z=el('div','wv-zones');W.zones.forEach(([n,t],i)=>{const d=el('div','wz wz'+i);d.append(el('b',null,n),el('span',null,t));z.append(d);});tr.append(z);
+  c.append(tr,el('p','wv-zero',W.zero));
+  const adj=el('div','wv-adj');W.adjust.forEach(a=>{const b=el('div','wa');b.append(el('h4',null,a.who));const r=el('div','wa-row');
+   a.items.forEach(([k,v])=>{const it=el('div','wa-it');it.append(img(W.tokens[v],v),el('span',null,k),el('b','wa-v '+(v.startsWith('+')?'n-p':v==='0'?'n-z':'n-m'),v));r.append(it);});b.append(r);adj.append(b);});
+  c.append(el('h4','wv-h','최종 지목 보정 — 6라운드가 끝나고 밀정을 지목한 결과로 생산진행도를 한 칸 더 움직임'),adj,el('p','wv-note',W.note));s.append(c);}heading(s,'인원별 구성');s.append(table(C.setup.head,C.setup.rows,'setup'),setupCards(C.setup));
  if(C.todo?.length||C.cost){const g2=el('div','grid g2');g2.style.marginTop='16px';if(C.todo?.length)g2.append(list('다듬을 곳',C.todo));if(C.cost){const cost=el('div','card');cost.append(el('h3',null,'세트 원가'),el('p',null,C.cost));g2.append(cost);}s.append(g2);}}
 
 // 2) 기획 · 아이디어 도출
@@ -153,5 +162,13 @@ function highlight(id){if(!id){mapNodes.forEach(n=>n.classList.remove('dim'));ma
 const LOG_HEAD=['날짜','한 일','분야'];
 for(const t of document.querySelectorAll('main table')){const rows=[...t.rows];const ths=rows[0]?.querySelectorAll('th');const head=ths?.length?[...ths].map(x=>x.textContent):t.classList.contains('tl')?LOG_HEAD:[];
  t.classList.add('stack');for(const r of rows)[...r.cells].forEach((c,i)=>{if(c.tagName==='TD'&&head[i])c.dataset.label=head[i];});}
+// 글 다듬기 (관계 맵 그림 속 글자는 건드리지 않음)
+// 1) 여러 문장이 한 덩어리면 마침표 뒤에서 줄바꿈  2) 생산진행도 숫자에 진영 색: −는 조선 남색, +는 일본 빨강, 0은 중립 금색
+{const SIGN=/\((?:[−-]|\+)\)|(?<![\w가-힣−+-])[−+-]\d+(?:~[−+]\d+)?|(?<![\w.~가-힣])0(?![\w.%~])/g;
+ const w=document.createTreeWalker(main,NodeFilter.SHOW_TEXT),nodes=[];let n;while(n=w.nextNode())if(!n.parentElement.closest('svg,script,style,.wv'))nodes.push(n);
+ for(const t of nodes){if(/[.?!] +(?=\S)/.test(t.data)){t.data=t.data.replace(/([.?!]) +(?=\S)/g,'$1\n');t.parentElement.classList.add('lines');}
+  SIGN.lastIndex=0;if(!SIGN.test(t.data))continue;SIGN.lastIndex=0;const f=document.createDocumentFragment();let last=0,m;
+  while(m=SIGN.exec(t.data)){f.append(t.data.slice(last,m.index));const s=m[0];f.append(el('b','num '+(s.includes('~')?'n-r':/[−-]/.test(s)?'n-m':s.includes('+')?'n-p':'n-z'),s));last=m.index+s.length;}
+  f.append(t.data.slice(last));t.replaceWith(f);}}
 blank();show(SHOWN.includes(location.hash.slice(1))?location.hash.slice(1):'overview');
 })();
