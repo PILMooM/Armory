@@ -98,7 +98,7 @@ function showRole(id){const r=roles.get(id);if(!r)return;const box=el('div','kv'
   const media=el('div','mk-media');
   const sources=i===0?['token-plus.png','token-zero.png','token-minus.png']:i===1?['gl-tray.png']:i===6?['track.jpg','rounds.jpg']:[m.img];
   if(i===0)media.classList.add('mk-tokens');if(i===6)media.classList.add('mk-boards');
-  sources.forEach(src=>{const mi=img(src,m.name);mi.loading='eager';media.append(mi);});top.append(media);
+  sources.forEach((src,k)=>{const mi=img(src,m.name);mi.loading='eager';if(i===0){const f=el('figure','mk-token');mi.alt=['철','금속스크랩','녹슨철'][k];f.append(mi,el('figcaption',null,['철 ×2','금속스크랩 ×1','녹슨철 ×2'][k]));media.append(f);}else media.append(mi);});top.append(media);
   const body=el('div','mk-body');const row=(lb,txt,cl)=>{const r=el('div','mk-row '+cl);r.append(el('i',null,lb),el('p',null,txt));return r;};
   body.append(row('규칙',m.rule,'rule'),row('왜 이렇게',m.why,'why'));const f=el('div','mk-feel');f.append(el('p',null,m.feel));body.append(f);c.append(top,body);g.append(c);});s.append(g);
  // 누가 무엇을 아는가: 글 대신 아는 정도를 칩으로 (앎 · 일부 · 모름)
@@ -177,8 +177,10 @@ function highlight(id){if(!id){mapNodes.forEach(n=>n.classList.remove('dim'));ma
  s.append(list);if(C.cost){const n=el('div','card note');n.style.marginTop='16px';n.append(el('h3',null,'세트 원가'),el('p',null,C.cost));s.append(n);}}
 
 // 8) 기획 로드맵: 단계 흐름 + 날짜별 기록
-{const s=sections.roadmap;intro(s,'아이디어에서 실물, 체험, 판매까지 어디쯤 와 있는지 보여 줍니다. 초록은 완료, 금색은 진행 중, 회색은 앞으로 할 일입니다.');
- const road=el('div','phases');(C.phases||[]).forEach((p,i)=>{const c=el('div','card phase st-'+p.state);c.append(el('span','pno',two(i)),el('span','pstate',STATE[p.state]||''),el('h3',null,p.name));const ul=el('ul','clean');p.items.forEach(t=>ul.append(el('li',null,t)));c.append(ul);road.append(c);});
+{const s=sections.roadmap;intro(s,'완료한 준비부터 지금 검증하는 일, 앞으로의 출시 계획까지 순서대로 확인하세요.');
+ const phases=C.phases||[],summary=el('div','road-summary');
+ [['done','완료한 단계'],['now','지금 진행 중'],['next','앞으로 할 일']].forEach(([state,label])=>{const block=el('div','road-stat '+state);block.append(el('small',null,label),el('strong',null,phases.filter(p=>p.state===state).length+'단계'),el('span',null,phases.filter(p=>p.state===state).map(p=>p.name).join(' · ')));summary.append(block);});s.append(summary);
+ const road=el('div','phases');phases.forEach((p,i)=>{const c=el('article','card phase st-'+p.state);const h=el('div','phase-head'),title=el('div','phase-title');title.append(el('small',null,'STEP '+two(i)),el('h3',null,p.name));h.append(el('span','phase-icon',p.state==='done'?'✓':p.state==='now'?'→':String(i+1)),title,el('span','pstate',STATE[p.state]||''));c.append(h);const ul=el('ul','clean');p.items.forEach(t=>ul.append(el('li',null,t)));c.append(ul);const foot=el('div','phase-foot',i<phases.length-1?'다음 단계  →  '+phases[i+1].name:'다음 자체 타이틀로 이어집니다');c.append(foot);road.append(c);});
  s.append(road);if(C.log?.length){heading(s,'날짜별 기록');const t=el('table','tl');
  for(const [time,what,area,future,photo] of C.log||[]){const tr=el('tr',future?'future':'');const w=el('td',null,what);if(photo){const a=el('a','log-photo');a.href='그림/'+photo;a.target='_blank';a.title='크게 보기';a.append(img(photo,what));w.append(a);}tr.append(el('td',null,time),w,el('td','who',area||''));t.append(tr);}
  const card=el('div','card');card.append(t);s.append(card);}}
