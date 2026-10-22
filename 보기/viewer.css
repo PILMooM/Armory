@@ -299,3 +299,8 @@ b.n-r{color:var(--ink);background:linear-gradient(90deg,var(--navy-soft),var(--g
 .wa-it .wa-v{font-size:15px;font-weight:900;border-radius:6px;padding:1px 9px}
 .wa-it img{width:76px;height:76px}
 @media(max-width:720px){.wa-it img{width:58px;height:58px}}
+/* 최종 지목 보정 상자: 두 칸 같은 폭, 제목·토큰 가운데 */
+.wv-adj{grid-template-columns:1fr 1fr}
+.wa{text-align:center}
+.wa-row{justify-content:center;gap:22px}
+@media(max-width:720px){.wv-adj{grid-template-columns:1fr}}
