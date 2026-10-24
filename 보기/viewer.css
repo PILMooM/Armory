@@ -451,8 +451,3 @@ b.n-m{background:linear-gradient(transparent 58%,#c9d8ea 58%) !important}
 b.n-p{background:linear-gradient(transparent 58%,#f2cdc7 58%) !important}
 b.n-z{background:linear-gradient(transparent 58%,#ecdcae 58%) !important}
 b.n-r{background:linear-gradient(transparent 58%,#e2dccd 58%) !important}
-/* 캐릭터 카드: 실물 카드처럼 모서리를 둥글게 */
-.gl-side img{border-radius:16px}
-.gl-shot.k-card img{border-radius:9px}
-.card-gallery img{border-radius:12px}
-@media(max-width:720px){.gl-side img{border-radius:12px}.gl-shot.k-card img{border-radius:7px}}
