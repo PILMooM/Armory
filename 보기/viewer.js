@@ -24,10 +24,10 @@ const DETAIL=new Set(['map','roles','flow','parts']);
 const tabbar=el('div','tabbar');tabbar.append(tabs);header.append(head);document.body.append(header,tabbar);
 const main=el('main'),views=el('div'),detail=el('aside','card');detail.id='detail';main.append(views,detail);document.body.append(main);
 // 콘티.js에 내용이 없는 탭은 버튼을 숨김 (공개판은 게임 진행 등을 뺀 콘티.js를 씀)
-const HAS={parts:false,idea:!!C.ideation,mechanics:!!C.mechanics?.length,flow:!!C.stages?.length,roadmap:!!C.phases?.length};
+const HAS={idea:!!C.ideation,mechanics:!!C.mechanics?.length,flow:!!C.stages?.length,roadmap:!!C.phases?.length};
 const SHOWN=TABS.filter(([id])=>HAS[id]!==false).map(([id])=>id);
 const sections={};for(const [id,name] of TABS){const s=el('section','view');s.hidden=true;sections[id]=s;views.append(s);if(!SHOWN.includes(id))continue;const b=el('button',null,name);b.dataset.tab=id;b.onclick=()=>show(id);tabs.append(b);}
-function show(id){if(id==='parts')id='overview';for(const b of tabs.children){b.classList.toggle('on',b.dataset.tab===id);if(b.dataset.tab===id)tabs.scrollTo({left:b.offsetLeft-(tabs.clientWidth-b.offsetWidth)/2});}for(const [k,s] of Object.entries(sections))s.hidden=k!==id;main.classList.toggle('wide',WIDE.has(id));if(id==='map'&&mapWrap)mapWrap.scrollLeft=(mapWrap.scrollWidth-mapWrap.clientWidth)/2;detail.hidden=!DETAIL.has(id);try{history.replaceState(null,'','#'+id);}catch{}scrollTo({top:0});}
+function show(id){for(const b of tabs.children){b.classList.toggle('on',b.dataset.tab===id);if(b.dataset.tab===id)tabs.scrollTo({left:b.offsetLeft-(tabs.clientWidth-b.offsetWidth)/2});}for(const [k,s] of Object.entries(sections))s.hidden=k!==id;main.classList.toggle('wide',WIDE.has(id));if(id==='map'&&mapWrap)mapWrap.scrollLeft=(mapWrap.scrollWidth-mapWrap.clientWidth)/2;detail.hidden=!DETAIL.has(id);try{history.replaceState(null,'','#'+id);}catch{}scrollTo({top:0});}
 
 // 공통 조각
 function blank(){detail.replaceChildren(el('p','empty','역할이나 구성품을 누르면 여기에 자세히 나옵니다.'));}
@@ -67,7 +67,7 @@ function showRole(id){const r=roles.get(id);if(!r)return;const box=el('div','kv'
   gh(G.sides.title,G.sides.sub);const sd=el('div','gl-sides');G.sides.items.forEach(([im,tag,col,txt])=>{const d=el('div','gl-side');d.append(img(im,tag),el('span','gl-tag '+col,tag),el('p',null,txt));sd.append(d);});s.append(sd);
   gh(G.round.title,G.round.sub);const st=el('div','gl-strip');G.round.items.forEach((r,i)=>{const f=el('div','gl-frame'),sh=el('div','gl-shot k-'+r.kind);
    sh.append(el('span','gl-no'+(r.hot?' red':''),two(i)));r.imgs.forEach(x=>sh.append(x==='→'?el('span','gl-arrow','→'):img(x,'')));
-   const cap=el('div','gl-cap');cap.append(el('b',null,r.title),el('span',null,r.text));const em=el('em');em.append(el('i',null,'게임 팁! · '),document.createTextNode(r.aim));cap.append(em);f.append(sh,cap);st.append(f);});s.append(st);
+   const cap=el('div','gl-cap');cap.append(el('b',null,r.title),el('span',null,r.text));const em=el('em');em.append(el('i',null,'노림수 · '),document.createTextNode(r.aim));cap.append(em);f.append(sh,cap);st.append(f);});s.append(st);
   gh(G.road.title,G.road.sub);const rd=el('div','gl-road');G.road.items.forEach(([r,n,sm,note])=>{const d=el('div','gl-r'+(note?' hot':''));const c=el('div','gl-crew',n);c.append(el('small',null,sm));d.append(el('i',null,r),c);if(note)d.append(el('div','gl-note',note));rd.append(d);});
   {const d=el('div','gl-r final');d.append(el('i',null,G.road.final[0]),el('div','gl-note',G.road.final[1]));rd.append(d);}
   const rw=el('div','gl-roadwrap');rw.append(rd);s.append(rw);
@@ -93,12 +93,8 @@ function showRole(id){const r=roles.get(id);if(!r)return;const box=el('div','kv'
 // 3) 메커니즘 설계
 {const s=sections.mechanics;intro(s,'게임을 움직이는 장치들입니다. 규칙이 무엇인지, 왜 그렇게 설계했는지, 플레이어가 무엇을 느끼게 되는지를 함께 적었습니다.');
  // 장치 카드: 그림·번호·이름 → 규칙 → 왜 이렇게(옅게) → 플레이어의 한마디(말풍선)
- const g=el('div','mk-grid');(C.mechanics||[]).forEach((m,i)=>{const c=el('div','mk'+(m.name.includes('일본군 대장')?' mk-captain':''));const top=el('div','mk-top');const nm=el('div','mk-name');
+ const g=el('div','mk-grid');(C.mechanics||[]).forEach((m,i)=>{const c=el('div','mk');const top=el('div','mk-top'),mi=img(m.img,m.name);mi.loading='eager';const wide=()=>{if(mi.naturalWidth/mi.naturalHeight>1.8)top.classList.add('wide');};mi.complete?wide():mi.addEventListener('load',wide);top.append(mi);const nm=el('div','mk-name');
   const [t1,t2]=m.name.split(' — ');nm.append(el('span','mk-no',two(i)),el('b',null,t1));if(t2)nm.append(el('small',null,t2));top.append(nm);
-  const media=el('div','mk-media');
-  const sources=i===0?['token-plus.png','token-zero.png','token-minus.png']:i===1?['gl-tray.png']:i===6?['track.jpg','rounds.jpg']:[m.img];
-  if(i===0)media.classList.add('mk-tokens');if(i===6)media.classList.add('mk-boards');
-  sources.forEach((src,k)=>{const mi=img(src,m.name);mi.loading='eager';if(i===0){const f=el('figure','mk-token');mi.alt=['철','금속스크랩','녹슨철'][k];f.append(mi,el('figcaption',null,['철 ×2','금속스크랩 ×1','녹슨철 ×2'][k]));media.append(f);}else media.append(mi);});top.append(media);
   const body=el('div','mk-body');const row=(lb,txt,cl)=>{const r=el('div','mk-row '+cl);r.append(el('i',null,lb),el('p',null,txt));return r;};
   body.append(row('규칙',m.rule,'rule'),row('왜 이렇게',m.why,'why'));const f=el('div','mk-feel');f.append(el('p',null,m.feel));body.append(f);c.append(top,body);g.append(c);});s.append(g);
  // 누가 무엇을 아는가: 글 대신 아는 정도를 칩으로 (앎 · 일부 · 모름)
@@ -177,10 +173,8 @@ function highlight(id){if(!id){mapNodes.forEach(n=>n.classList.remove('dim'));ma
  s.append(list);if(C.cost){const n=el('div','card note');n.style.marginTop='16px';n.append(el('h3',null,'세트 원가'),el('p',null,C.cost));s.append(n);}}
 
 // 8) 기획 로드맵: 단계 흐름 + 날짜별 기록
-{const s=sections.roadmap;intro(s,'완료한 준비부터 지금 검증하는 일, 앞으로의 출시 계획까지 순서대로 확인하세요.');
- const phases=C.phases||[],summary=el('div','road-summary');
- [['done','완료한 단계'],['now','지금 진행 중'],['next','앞으로 할 일']].forEach(([state,label])=>{const block=el('div','road-stat '+state);block.append(el('small',null,label),el('strong',null,phases.filter(p=>p.state===state).length+'단계'),el('span',null,phases.filter(p=>p.state===state).map(p=>p.name).join(' · ')));summary.append(block);});s.append(summary);
- const road=el('div','phases');phases.forEach((p,i)=>{const c=el('article','card phase st-'+p.state);const h=el('div','phase-head'),title=el('div','phase-title');title.append(el('small',null,'STEP '+two(i)),el('h3',null,p.name));h.append(el('span','phase-icon',p.state==='done'?'✓':p.state==='now'?'→':String(i+1)),title,el('span','pstate',STATE[p.state]||''));c.append(h);const ul=el('ul','clean');p.items.forEach(t=>ul.append(el('li',null,t)));c.append(ul);const foot=el('div','phase-foot',i<phases.length-1?'다음 단계  →  '+phases[i+1].name:'다음 자체 타이틀로 이어집니다');c.append(foot);road.append(c);});
+{const s=sections.roadmap;intro(s,'아이디어에서 실물, 체험, 판매까지 어디쯤 와 있는지 보여 줍니다. 초록은 완료, 금색은 진행 중, 회색은 앞으로 할 일입니다.');
+ const road=el('div','phases');(C.phases||[]).forEach((p,i)=>{const c=el('div','card phase st-'+p.state);c.append(el('span','pno',two(i)),el('span','pstate',STATE[p.state]||''),el('h3',null,p.name));const ul=el('ul','clean');p.items.forEach(t=>ul.append(el('li',null,t)));c.append(ul);road.append(c);});
  s.append(road);if(C.log?.length){heading(s,'날짜별 기록');const t=el('table','tl');
  for(const [time,what,area,future,photo] of C.log||[]){const tr=el('tr',future?'future':'');const w=el('td',null,what);if(photo){const a=el('a','log-photo');a.href='그림/'+photo;a.target='_blank';a.title='크게 보기';a.append(img(photo,what));w.append(a);}tr.append(el('td',null,time),w,el('td','who',area||''));t.append(tr);}
  const card=el('div','card');card.append(t);s.append(card);}}
