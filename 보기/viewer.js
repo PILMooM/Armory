@@ -48,7 +48,7 @@ function showPart(id){const p=parts.get(id);if(!p)return;const box=el('div','kv'
  // Like the role panel: text fields first, then small pictures with captions underneath.
  const gallery=el('div','part-gallery');const fig=(src,cap)=>{const f=el('figure'),a=el('a');a.href='그림/'+src;a.target='_blank';a.title='크게 보기';a.append(img(src,cap));f.append(a,el('figcaption',null,cap));gallery.append(f);};
  fig(p.img,p.imgCaption||(p.photo?'디자인':p.title));if(p.photo)fig(p.photo,p.photoCaption||'실물 출력');for(const m of p.more||[])fig(m.img,m.cap);
- box.append(...[h,field('수량',p.count),field('쓰임',p.use),field('이것이 드러내는 것',p.shows),field('노림수',p.intent),field(C.madeLabel||'제작 방식 · 원가',p.made,'made'),gallery].filter(Boolean));
+ box.append(...[h,field('수량',p.count),field('쓰임',p.use),field('정보',p.shows),field('팁',p.intent),field(C.madeLabel||'제작 방식 · 원가',p.made,'made'),gallery].filter(Boolean));
  if(p.points?.length){const f=el('div','field');f.append(el('b',null,'연결'));const ul=el('ul','clean');for(const x of p.points)ul.append(el('li',null,(roles.get(x.to)?.name||parts.get(x.to)?.title||x.to)+' — '+x.label));f.append(ul);box.append(f);}
  const used=(C.stages||[]).map((s,i)=>s.uses?.includes(id)?two(i)+' '+s.name:null).filter(Boolean);if(used.length)box.append(listField('쓰이는 장면',used));
  detail.replaceChildren(box);highlight(id);toDetail();}
@@ -167,7 +167,7 @@ function highlight(id){if(!id){mapNodes.forEach(n=>n.classList.remove('dim'));ma
  s.append(board);}
 
 // 7) 구성품
-{const s=sections.parts;intro(s,C.partsIntro||'게임에 들어가는 구성품입니다. 각 구성품이 드러내는 정보와 노림수, 실제 제작 방식과 원가를 함께 적었습니다.');
+{const s=sections.parts;intro(s,C.partsIntro||'게임에 들어가는 구성품입니다. 각 구성품의 정보와 팁, 실제 제작 방식과 원가를 함께 적었습니다.');
  const list=el('div','partlist');for(const p of C.parts||[]){const c=el('div','card part');const pic=el('div','pic');pic.append(img(p.img,p.title));const body=el('div');const top=el('div','top'),t=el('strong');t.append(el('span','tag t-part',p.id),document.createTextNode(p.title));top.append(t,el('span','mute',p.count));
   body.append(top,el('div','sub',p.use),el('div','shows','→ '+(p.shows||'')),el('div','made-line',p.made||''));c.append(pic,body);c.onclick=()=>showPart(p.id);list.append(c);}
  s.append(list);if(C.cost){const n=el('div','card note');n.style.marginTop='16px';n.append(el('h3',null,'세트 원가'),el('p',null,C.cost));s.append(n);}}
