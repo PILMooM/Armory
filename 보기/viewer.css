@@ -452,3 +452,7 @@ b.n-p{background:linear-gradient(transparent 58%,#f2cdc7 58%) !important}
 b.n-z{background:linear-gradient(transparent 58%,#ecdcae 58%) !important}
 b.n-r{background:linear-gradient(transparent 58%,#e2dccd 58%) !important}
 .mk-top.wide img{max-height:380px}
+/* 01·02·04·06 그림: 흰 배경 상자 없이, 조금 크게 */
+.mk-top:not(.wide){grid-template-columns:200px 1fr}
+.mk-top:not(.wide) img{width:200px;height:150px;background:none;border-radius:0}
+@media(max-width:720px){.mk-top:not(.wide){grid-template-columns:120px 1fr}.mk-top:not(.wide) img{width:120px;height:96px}}
