@@ -451,7 +451,3 @@ b.n-m{background:linear-gradient(transparent 58%,#c9d8ea 58%) !important}
 b.n-p{background:linear-gradient(transparent 58%,#f2cdc7 58%) !important}
 b.n-z{background:linear-gradient(transparent 58%,#ecdcae 58%) !important}
 b.n-r{background:linear-gradient(transparent 58%,#e2dccd 58%) !important}
-/* 메커니즘 카드 속 캐릭터 카드: 실물처럼 둥근 모서리 */
-.mk-top img.mk-card{width:auto;height:118px;justify-self:center;border-radius:9px;background:none;object-fit:cover;box-shadow:0 2px 6px #0003}
-@media(max-width:720px){.mk-top img.mk-card{height:84px;border-radius:7px}}
-.mk-top.wide img{max-height:220px}
