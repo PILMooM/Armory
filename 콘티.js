@@ -663,7 +663,7 @@ window.CONTI={
   {
    "id": "P1",
    "title": "역할 카드",
-   "img": "cards.jpg",
+   "img": "role-cards.jpg",
    "count": "7장 (7인 세트) · 디자인 10종 + 뒷면",
    "kind": "card",
    "use": "진영을 나눈다. 대장 카드만 바로 공개하고, 나머지는 게임이 끝날 때까지 보여줄 수 없다 (말로 주장·거짓말은 가능).",
